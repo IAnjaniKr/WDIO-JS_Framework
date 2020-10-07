@@ -20,8 +20,4 @@ describe('Vote Section Test suite',()=>{
         browser.saveScreenshot('screenShots/vote.png')
         //browser.saveDocumentScreenshot('screenShots/vote.png')
     })
-
-    it('Should test something else',()=>{
-
-    })
 })
