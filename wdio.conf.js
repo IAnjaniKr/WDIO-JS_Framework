@@ -20,12 +20,16 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        './tests/*.spec.js'
-        //'./tests/vote.spec.js',
-        //'./tests/roster.spec.js',
-        //'./tests/intro.spec.js',
-        //'./tests/login.spec.js',
-        //'./tests/header.spec.js'
+        './tests/rosterDynamic.spec.js',
+        './tests/vote.spec.js',
+        './tests/roster.spec.js',
+        './tests/intro.spec.js',
+        './tests/login.spec.js',
+       './tests/header.spec.js',
+       './tests/elementStatus.spec.js',
+       './tests/elementStatus1.spec.js',
+       './tests/elementStatus2.spec.js',
+       './tests/elementStatus3.spec.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -130,7 +134,13 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter.html
-    reporters: ['spec'],
+    reporters: ['spec',
+    ['allure',{
+    outputDir: 'allure-results',
+    disableWebdriverStepsReporting: true,
+    disableWebdriverScreenshotsReporting: true,
+        }
+    ]],
  
     //
     // Options to be passed to Mocha.
@@ -169,8 +179,10 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
-    // before: function (capabilities, specs) {
-    // },
+     before: function () {
+         const assert = require('assert')
+         global.assert = assert;
+        },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {String} commandName hook command name

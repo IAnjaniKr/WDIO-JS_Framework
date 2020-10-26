@@ -111,7 +111,8 @@ describe('Test suite',()=>{
         assert.strictEqual(LoginPage.emailField.getValue(),'','Values do not match')
         assert.strictEqual(LoginPage.passwordField.getValue().length,0,'Length is not same')
         assert.strictEqual(LoginPage.rememberLoginCheckbox.isSelected(),false,'Checkbox is selected')
-        browser.saveScreenshot('screenShots/login.png')
+        //browser.saveScreenshot('screenShots/login.png')
+		browser.saveDocumentScreenshot('screenShots/login.png')
     })
 
 })

@@ -3,6 +3,7 @@ const HeaderPage = require('../pages/header.page')
 const LoginPage = require('../pages/login.page')
 
 describe('Header Test suite',()=>{
+    
     it('Should redirect to new site',()=>{
         browser.url('')
         LoginPage.emailField.setValue('1@2.com')
@@ -119,5 +120,6 @@ describe('Header Test suite',()=>{
         browser.acceptAlert()
         assert.strictEqual(browser.isAlertOpen(),false,'Alert is still open')
         browser.pause(3000)
+        
     }) 
 })
