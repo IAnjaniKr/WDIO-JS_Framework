@@ -1,4 +1,33 @@
-exports.config = {
+import { existsSync, mkdirSync, readFileSync } from 'node:fs'
+
+function loadEnvFile(filePath = '.env') {
+    if (!existsSync(filePath)) {
+        return
+    }
+
+    for (const line of readFileSync(filePath, 'utf8').split(/\r?\n/)) {
+        const trimmedLine = line.trim()
+
+        if (!trimmedLine || trimmedLine.startsWith('#')) {
+            continue
+        }
+
+        const separatorIndex = trimmedLine.indexOf('=')
+
+        if (separatorIndex === -1) {
+            continue
+        }
+
+        const key = trimmedLine.slice(0, separatorIndex).trim()
+        const value = trimmedLine.slice(separatorIndex + 1).trim()
+
+        process.env[key] ??= value
+    }
+}
+
+loadEnvFile()
+
+export const config = {
     //
     // ====================
     // Runner Configuration
@@ -20,16 +49,12 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        './tests/rosterDynamic.spec.js',
+        './tests/login.spec.js',
         './tests/vote.spec.js',
         './tests/roster.spec.js',
         './tests/intro.spec.js',
-        './tests/login.spec.js',
-       './tests/header.spec.js',
-       './tests/elementStatus.spec.js',
-       './tests/elementStatus1.spec.js',
-       './tests/elementStatus2.spec.js',
-       './tests/elementStatus3.spec.js'
+        './tests/header.spec.js',
+        './tests/smoke.spec.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -102,7 +127,7 @@ exports.config = {
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
     //baseUrl: 'http://localhost',
-    baseUrl: 'http://localhost:8080/index.html',
+    baseUrl: process.env['APP_BASE_URL'] ?? 'http://localhost:8080/index.html',
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,
@@ -118,7 +143,7 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['chromedriver'],
+    services: [],
     
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -162,8 +187,9 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onPrepare: function (config, capabilities) {
-    // },
+    onPrepare: function () {
+        mkdirSync('screenShots', { recursive: true })
+    },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
      * to manipulate configurations depending on the capability or spec.
@@ -180,9 +206,9 @@ exports.config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
      before: function () {
-         const assert = require('assert')
-         global.assert = assert;
-        },
+        const nodeAssert = require('assert')
+        ;(global as any).assert = nodeAssert
+    },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {String} commandName hook command name

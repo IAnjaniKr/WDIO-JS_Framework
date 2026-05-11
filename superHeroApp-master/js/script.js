@@ -1,11 +1,13 @@
 $('#addHero-form').submit(function(event) {
   $('#addHero-Alert').addClass('hide');
 
-  if ($('#heroInput').val() == '') {
+  var heroName = $('#heroInput').val();
+
+  if (heroName == '') {
     $('#addHero-Alert').removeClass('hide');
     $('#addHero-Alert').text("You didn't enter anything!");
   } else {
-    $('#hero-list').append("<li class='list-group-item'>" + $('#heroInput').val() + '</li>');
+    $('#hero-list').append($('<li>').addClass('list-group-item').text(heroName));
     $('#heroInput').val('');
   }
 
@@ -57,28 +59,29 @@ $('#search-form').submit(function(event) {
   event.preventDefault();
 });
 
+var rememberedEmail = '';
+var rememberedPassword = '';
+
 $('#form-login').submit(function(event) {
-  if ($('#loginEmail').val() == '' || $('#loginPassword').val() == '') {
+  var email = $('#loginEmail').val();
+  var password = $('#loginPassword').val();
+
+  if (email == '' || password == '') {
     alert('Please enter an email and password');
   } else {
-    if ($('#loginEmail').val() == '1@2.com' && $('#loginPassword').val() == 'password') {
-      $('#login-alert').addClass('hide');
+    $('#login-alert').addClass('hide');
 
-      if ($('#loginEmail').val() == '' || $('#loginPassword').val() == '') {
-        $('#login-alert').removeClass('hide');
-      } else {
-        if ($('#rememberLoginChk').is(':checked')) {
-          var email = $('#loginEmail').text();
-          var password = $('#loginPassword').text();
-        } else {
-          $('#loginEmail').val('');
-          $('#loginPassword').val('');
-        }
-        $('#overlay').addClass('hide');
-      }
+    if ($('#rememberLoginChk').is(':checked')) {
+      rememberedEmail = email;
+      rememberedPassword = password;
     } else {
-      alert('Invalid email and password');
+      rememberedEmail = '';
+      rememberedPassword = '';
+      $('#loginEmail').val('');
+      $('#loginPassword').val('');
     }
+
+    $('#overlay').addClass('hide');
   }
 
   event.preventDefault();
@@ -86,6 +89,6 @@ $('#form-login').submit(function(event) {
 
 function logout() {
   $('#overlay').removeClass('hide');
-  $('#loginEmail').val(email);
-  $('#loginPassword').val(password);
+  $('#loginEmail').val(rememberedEmail);
+  $('#loginPassword').val(rememberedPassword);
 }
